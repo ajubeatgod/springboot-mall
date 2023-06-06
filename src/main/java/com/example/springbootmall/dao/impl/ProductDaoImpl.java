@@ -1,5 +1,6 @@
 package com.example.springbootmall.dao.impl;
 
+import com.example.springbootmall.constant.ProductCategory;
 import com.example.springbootmall.dao.ProductDao;
 import com.example.springbootmall.dto.ProductRequest;
 import com.example.springbootmall.model.Product;
@@ -11,6 +12,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.*;
 
@@ -21,14 +23,24 @@ public class ProductDaoImpl implements ProductDao {
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Override
-    public List<Product> getProducts() {
-        String sql = "SELECT product_id, product_name, category, image_url, " +
-                "price, stock, description, created_date, last_modified_date " +
-                "FROM product";
+    public List<Product> getProducts(ProductCategory category, String productName) {
+        StringBuilder sqlSb = new StringBuilder();
+        sqlSb.append("SELECT product_id, product_name, category, image_url, ")
+                .append("price, stock, description, created_date, last_modified_date ")
+                .append("FROM product WHERE 1=1");
 
-        List<Product> productList = namedParameterJdbcTemplate.query(sql, new HashMap<>(), new ProductRowMapper());
+        Map<String, Object> map = new HashMap<>();
 
-        return productList;
+        if (Objects.nonNull(category)) {
+            sqlSb.append(" AND category = :category");
+            map.put("category", category.name());
+        }
+        if (StringUtils.hasText(productName)) {
+            sqlSb.append(" AND product_name LIKE :productName");
+            map.put("productName", "%" + productName + "%");
+        }
+
+        return namedParameterJdbcTemplate.query(sqlSb.toString(), map, new ProductRowMapper());
     }
 
     @Override
