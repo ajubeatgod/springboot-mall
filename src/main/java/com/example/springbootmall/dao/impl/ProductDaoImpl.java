@@ -34,14 +34,7 @@ public class ProductDaoImpl implements ProductDao {
         String productName = productQueryParams.getProductName();
 
         // Filtering
-        if (Objects.nonNull(category)) {
-            sqlSb.append(" AND category = :category");
-            map.put("category", category.name());
-        }
-        if (StringUtils.hasText(productName)) {
-            sqlSb.append(" AND product_name LIKE :productName");
-            map.put("productName", "%" + productName + "%");
-        }
+        addFilteringSql(sqlSb, map, category, productName);
 
         return namedParameterJdbcTemplate.queryForObject(sqlSb.toString(), map, Integer.class);
     }
@@ -63,14 +56,7 @@ public class ProductDaoImpl implements ProductDao {
         Integer offset = productQueryParams.getOffset();
 
         // Filtering
-        if (Objects.nonNull(category)) {
-            sqlSb.append(" AND category = :category");
-            map.put("category", category.name());
-        }
-        if (StringUtils.hasText(productName)) {
-            sqlSb.append(" AND product_name LIKE :productName");
-            map.put("productName", "%" + productName + "%");
-        }
+        addFilteringSql(sqlSb, map, category, productName);
 
         // Sorting, "ORDER BY" must use "string append" to implement
         sqlSb.append(" ORDER BY ").append(orderBy).append(" ").append(sort);
@@ -158,5 +144,17 @@ public class ProductDaoImpl implements ProductDao {
         map.put("price", productRequest.getPrice());
         map.put("stock", productRequest.getStock());
         map.put("description", productRequest.getDescription());
+    }
+
+    private void addFilteringSql(StringBuilder sqlSb, Map<String, Object> map, ProductCategory category, String productName) {
+        // Filtering
+        if (Objects.nonNull(category)) {
+            sqlSb.append(" AND category = :category");
+            map.put("category", category.name());
+        }
+        if (StringUtils.hasText(productName)) {
+            sqlSb.append(" AND product_name LIKE :productName");
+            map.put("productName", "%" + productName + "%");
+        }
     }
 }
