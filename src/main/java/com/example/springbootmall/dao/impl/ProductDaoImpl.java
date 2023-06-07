@@ -36,7 +36,10 @@ public class ProductDaoImpl implements ProductDao {
         String productName = productQueryParams.getProductName();
         String orderBy = productQueryParams.getOrderBy();
         String sort = productQueryParams.getSort();
+        Integer limit = productQueryParams.getLimit();
+        Integer offset = productQueryParams.getOffset();
 
+        // Filtering
         if (Objects.nonNull(category)) {
             sqlSb.append(" AND category = :category");
             map.put("category", category.name());
@@ -46,8 +49,13 @@ public class ProductDaoImpl implements ProductDao {
             map.put("productName", "%" + productName + "%");
         }
 
-        // "ORDER BY" must use "string append" to implement
+        // Sorting, "ORDER BY" must use "string append" to implement
         sqlSb.append(" ORDER BY ").append(orderBy).append(" ").append(sort);
+
+        // Pagination
+        sqlSb.append(" LIMIT :limit OFFSET :offset");
+        map.put("limit", limit);
+        map.put("offset", offset);
 
         return namedParameterJdbcTemplate.query(sqlSb.toString(), map, new ProductRowMapper());
     }
