@@ -34,6 +34,8 @@ public class ProductDaoImpl implements ProductDao {
 
         ProductCategory category = productQueryParams.getCategory();
         String productName = productQueryParams.getProductName();
+        String orderBy = productQueryParams.getOrderBy();
+        String sort = productQueryParams.getSort();
 
         if (Objects.nonNull(category)) {
             sqlSb.append(" AND category = :category");
@@ -43,6 +45,9 @@ public class ProductDaoImpl implements ProductDao {
             sqlSb.append(" AND product_name LIKE :productName");
             map.put("productName", "%" + productName + "%");
         }
+
+        // "ORDER BY" must use "string append" to implement
+        sqlSb.append(" ORDER BY ").append(orderBy).append(" ").append(sort);
 
         return namedParameterJdbcTemplate.query(sqlSb.toString(), map, new ProductRowMapper());
     }
