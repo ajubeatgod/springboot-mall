@@ -3,7 +3,7 @@ package com.example.springbootmall.dto;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
-public class UserRegisterRequest {
+public class UserLoginRequest {
 
     @NotBlank
     @Email
@@ -27,4 +27,5 @@ public class UserRegisterRequest {
     public void setPassword(String password) {
         this.password = password;
     }
+
 }
