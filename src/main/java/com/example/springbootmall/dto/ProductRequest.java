@@ -2,23 +2,19 @@ package com.example.springbootmall.dto;
 
 import com.example.springbootmall.constant.ProductCategory;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 
 public class ProductRequest {
 
-    @NotNull
+    @NotBlank
     private String productName;
-
-    @NotNull
+    @NotBlank
     private ProductCategory category;
-
-    @NotNull
+    @NotBlank
     private String imageUrl;
-
-    @NotNull
+    @NotBlank
     private Integer price;
-
-    @NotNull
+    @NotBlank
     private Integer stock;
 
     private String description;
