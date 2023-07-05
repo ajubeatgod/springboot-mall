@@ -2,8 +2,6 @@ package com.example.springbootmall.dto;
 
 import com.example.springbootmall.constant.ProductCategory;
 
-import java.util.PrimitiveIterator;
-
 public class ProductQueryParams {
 
     private ProductCategory category;
